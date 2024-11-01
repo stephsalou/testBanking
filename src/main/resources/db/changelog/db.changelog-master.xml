@@ -1,0 +1,362 @@
+<!-- TODO: clean change log -->
+
+<!--
+
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="stephane">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="firstName" type="VARCHAR(255)"/>
+            <column name="lastName" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+        <insert tableName="users">
+            <column name="id" value="1"/>
+            <column name="username" value="testuser"/>
+            <column name="email" value="testuser@example.com"/>
+            <column name="firstName" value="Test"/>
+            <column name="lastName" value="User"/>
+            <column name="password" value="hashed_password"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="active" value="true"/>
+        </insert>
+    </changeSet>
+    <changeSet id="3" author="stephane">
+        <createTable tableName="account_type">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="TEXT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+        <insert tableName="account_type">
+            <column name="id" value="1"/>
+            <column name="name" value="base"/>
+            <column name="description" value="first base account"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2" author="stephane">
+        <createTable tableName="account">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="accountId" type="UUID"/>
+            <column name="balance" type="DOUBLE"/>
+            <column name="userId" type="BIGINT"/>
+            <column name="type" type="BIGINT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="deleted_at" type="DATETIME"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="account"
+                                 baseColumnNames="userId"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_account_user"/>
+
+        <addForeignKeyConstraint baseTableName="account"
+                                 baseColumnNames="type"
+                                 referencedTableName="account_type"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_account_type"/>
+
+        <insert tableName="account">
+            <column name="id" value="1"/>
+            <column name="accountId" value="1b4e28ba-2fa1-11d2-883f-0016d3cca427"/>
+            <column name="balance" value="100000.0"/>
+            <column name="userId" value="1"/>
+            <column name="type" value="1"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="deleted_at" valueDate=""/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="5" author="stephane">
+        <createTable tableName="transaction_type">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="TEXT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+        <insert tableName="transaction_type">
+            <column name="id" value="1"/>
+            <column name="name" value="Deposit"/>
+            <column name="description" value="A deposit transaction"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+        </insert>
+        <insert tableName="transaction_type">
+            <column name="id" value="2"/>
+            <column name="name" value="Withdraw"/>
+            <column name="description" value="A withdraw transaction"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="4" author="stephane">
+        <createTable tableName="transaction">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="transactionTypeId" type="BIGINT"/>
+            <column name="sens" type="VARCHAR(50)"/>
+            <column name="amount" type="DOUBLE"/>
+            <column name="userId" type="BIGINT"/>
+            <column name="accountId" type="BIGINT"/>
+            <column name="mustBeShow" type="BOOLEAN"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="deleted_at" type="DATETIME"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="transaction"
+                                 baseColumnNames="transactionTypeId"
+                                 referencedTableName="transaction_type"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transaction_transactionType"/>
+
+        <addForeignKeyConstraint baseTableName="transaction"
+                                 baseColumnNames="userId"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transaction_user"/>
+
+        <addForeignKeyConstraint baseTableName="transaction"
+                                 baseColumnNames="accountId"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transaction_account"/>
+
+        <insert tableName="transaction">
+            <column name="id" value="1"/>
+            <column name="transactionTypeId" value="1"/>
+            <column name="sens" value="C"/>
+            <column name="amount" value="500.0"/>
+            <column name="userId" value="1"/>
+            <column name="accountId" value="1"/>
+            <column name="mustBeShow" value="true"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="deleted_at" valueDate=""/>
+        </insert>
+        <insert tableName="transaction">
+            <column name="id" value="2"/>
+            <column name="transactionTypeId" value="2"/>
+            <column name="sens" value="D"/>
+            <column name="amount" value="500.0"/>
+            <column name="userId" value="1"/>
+            <column name="accountId" value="1"/>
+            <column name="mustBeShow" value="true"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="deleted_at" valueDate=""/>
+        </insert>
+    </changeSet>
+    <changeSet id="6" author="stephane">
+        <createTable tableName="transaction_parameter">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="transactionId" type="BIGINT"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="transaction_parameter"
+                                 baseColumnNames="transactionId"
+                                 referencedTableName="transaction"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transaction_parameter_transaction"/>
+        <insert tableName="transaction_parameter">
+            <column name="id" value="1"/>
+            <column name="name" value="Fee"/>
+            <column name="value" value="0.1"/>
+            <column name="transactionId" value="1"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+        </insert>
+        <insert tableName="transaction_parameter">
+            <column name="id" value="1"/>
+            <column name="name" value="balanceBefore"/>
+            <column name="value" value="1000.0"/>
+            <column name="transactionId" value="1"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-11-01T00:00:00"/>
+            <column name="updated_at" valueDate="2024-11-01T00:00:00"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="stephane">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="firstName" type="VARCHAR(255)"/>
+            <column name="lastName" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="active" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="stephane">
+        <createTable tableName="account_type">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="TEXT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="stephane">
+        <createTable tableName="account">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="accountId" type="UUID"/>
+            <column name="balance" type="DOUBLE"/>
+            <column name="userId" type="BIGINT"/>
+            <column name="type" type="BIGINT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="deleted_at" type="DATETIME"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="account"
+                                 baseColumnNames="userId"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_account_user"/>
+
+        <addForeignKeyConstraint baseTableName="account"
+                                 baseColumnNames="type"
+                                 referencedTableName="account_type"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_account_type"/>
+    </changeSet>
+
+    <changeSet id="5" author="stephane">
+        <createTable tableName="transaction_type">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="TEXT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="stephane">
+        <createTable tableName="transaction">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="transactionTypeId" type="BIGINT"/>
+            <column name="sens" type="VARCHAR(50)"/>
+            <column name="amount" type="DOUBLE"/>
+            <column name="userId" type="BIGINT"/>
+            <column name="accountId" type="BIGINT"/>
+            <column name="mustBeShow" type="BOOLEAN"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="deleted_at" type="DATETIME"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="transaction"
+                                 baseColumnNames="transactionTypeId"
+                                 referencedTableName="transaction_type"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transaction_transactionType"/>
+
+        <addForeignKeyConstraint baseTableName="transaction"
+                                 baseColumnNames="userId"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transaction_user"/>
+
+        <addForeignKeyConstraint baseTableName="transaction"
+                                 baseColumnNames="accountId"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transaction_account"/>
+    </changeSet>
+
+
+
+
+    <changeSet id="6" author="stephane">
+        <createTable tableName="transaction_parameter">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="transactionId" type="BIGINT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="transaction_parameter"
+                                 baseColumnNames="transactionId"
+                                 referencedTableName="transaction"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transaction_parameter_transaction"/>
+    </changeSet>
+</databaseChangeLog>
